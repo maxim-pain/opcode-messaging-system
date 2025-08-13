@@ -54,6 +54,18 @@ The flow handles multi-hop routing (e.g., SoC1 Core1 publish â†’ IPC to Core2 â†
 
 ```mermaid
 graph TD
+
+%% Using high-contrast colors that work well on both dark and light backgrounds
+classDef client fill:#5271ff,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef server fill:#ff7452,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef library fill:#42b983,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef tools fill:#f4a261,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef test fill:#8338ec,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef build fill:#8338ec,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef data fill:#42b983,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef engine fill:#5271ff,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef external fill:#ff7452,stroke:#000000,stroke-width:2px,color:#ffffff
+
     subgraph AppLayer["Application Layer"]
         A["Publish/Subscribe API<br/>publish OPCODE, data, priority, ackPolicy<br/>subscribe OPCODE, callback"]
     end
@@ -106,11 +118,30 @@ graph TD
     P --> R
     R --> U
 
-    classDef appStyle fill:#ffd700,stroke:#333
-    classDef hwStyle fill:#add8e6,stroke:#333
-
-    class A appStyle
-    class U,V,W,X hwStyle
+    class A client
+    class B server
+    class C server
+    class D server
+    class E server
+    class F library
+    class G library
+    class H library
+    class I tools
+    class J tools
+    class K tools
+    class L engine
+    class M engine
+    class N engine
+    class O external
+    class P data
+    class Q data
+    class R external
+    class S external
+    class T external
+    class U data
+    class V data
+    class W data
+    class X data
 ```
 
 ## 4. Sequence Diagram: Multi-Hop OPCODE Publish with ACK
@@ -171,6 +202,7 @@ sequenceDiagram
 
 ```mermaid
 classDiagram
+
     direction TB
     class CommManager {
         +publish(Message, MessageContext) Result
@@ -268,6 +300,19 @@ classDiagram
     FactoryRegistry --> STM32DriverFactory : creates
     CommManager --> ConfigManager : configures via
     ConfigManager --> FactoryRegistry : uses for creation
+
+    class CommManager:::client
+    class OpcodeRegistry:::client
+    class IRouter:::server
+    class RouteManager:::server
+    class IProtocol:::library
+    class CustomAckProtocol:::library
+    class IDriver:::tools
+    class I2CDriver_STM32HAL:::tools
+    class FactoryRegistry:::engine
+    class IDriverFactory:::engine
+    class STM32DriverFactory:::engine
+    class ConfigManager:::external
 ```
 
 ### 5.1 Explanation of Key Relations
@@ -282,6 +327,18 @@ classDiagram
 
 ```mermaid
 flowchart LR
+
+%% Using high-contrast colors that work well on both dark and light backgrounds
+classDef client fill:#5271ff,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef server fill:#ff7452,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef library fill:#42b983,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef tools fill:#f4a261,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef test fill:#8338ec,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef build fill:#8338ec,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef data fill:#42b983,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef engine fill:#5271ff,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef external fill:#ff7452,stroke:#000000,stroke-width:2px,color:#ffffff
+
     A["Publish OPCODE"] --> B["Validate in Registry"]
     B --> C["Queue by Priority"]
     C --> D["Resolve Subscribers/Routes"]
@@ -299,13 +356,18 @@ flowchart LR
         G --> J
     end
 
-    classDef startStyle fill:#ff9,stroke:#333
-    classDef endStyle fill:#9f9,stroke:#333
-
-    class A startStyle
-    class J endStyle
+    class A client
+    class B server
+    class C server
+    class D server
+    class E library
+    class F library
+    class G library
+    class H library
+    class I tools
+    class J tools
+    class K tools
 ```
-
 
 ## 7. Headers and Documentation
 
@@ -941,12 +1003,20 @@ The messaging system includes comprehensive diagnostics:
    - Communication link health checks
    - Automatic recovery mechanisms
 
-### Additional Class Diagram Enhancements:
+### Additional Class Diagram Enhancements
 
 More detailed class diagram showing the relationships between configuration components and actual runtime components:
 
 ```mermaid
 classDiagram
+    %% High-contrast color scheme for accessibility
+    classDef client fill:#5271ff,stroke:#000000,color:#ffffff
+    classDef server fill:#ff7452,stroke:#000000,color:#ffffff
+    classDef library fill:#42b983,stroke:#000000,color:#ffffff
+    classDef tools fill:#f4a261,stroke:#000000,color:#ffffff
+    classDef engine fill:#5271ff,stroke:#000000,color:#ffffff
+    classDef external fill:#ff7452,stroke:#000000,color:#ffffff
+
     direction TB
 
     class SystemConfig {
@@ -1064,6 +1134,20 @@ classDiagram
 
     DriverManager --> DriverFactory : uses
     ProtocolManager --> ProtocolFactory : uses
+
+    class SystemConfig:::client
+    class ConfigManager:::client
+    class OpcodeRegistry:::server
+    class SubscriptionManager:::server
+    class RouteManager:::library
+    class DriverManager:::library
+    class ProtocolManager:::library
+    class SecurityManager:::tools
+    class DiagnosticsCollector:::tools
+    class CommManager:::engine
+    class Factory:::external
+    class DriverFactory:::external
+    class ProtocolFactory:::external
 ```
 
 These additions provide the more detailed configuration examples and component relationships.
