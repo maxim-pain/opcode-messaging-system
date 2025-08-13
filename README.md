@@ -1,7 +1,7 @@
 # OPCODE Messaging System
 
 <div align="center">
-  <img src="docs/images/opcode-logo.png" alt="OPCODE Messaging System Logo" width="300"/>
+  <img src="docs/images/opcode-logo.svg" alt="OPCODE Messaging System Logo" width="300"/>
   <br>
   <em>A robust, distributed messaging system for heterogeneous embedded platforms</em>
 </div>
