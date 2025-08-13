@@ -692,10 +692,10 @@ sequenceDiagram
 
 ### Prerequisites
 
-- C++17 compatible compiler
+- C++20 compatible compiler
 - CMake 3.14 or higher
 - Platform-specific dependencies:
-  - For STM32: STM32CubeMX and appropriate HAL
+  - For MCUs: appropriate HAL
   - For Linux: Standard development libraries
 
 ### Building
