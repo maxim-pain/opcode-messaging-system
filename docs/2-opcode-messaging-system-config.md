@@ -1005,6 +1005,18 @@ The following diagram visualizes how OPCODEs are mapped and routed across differ
 
 ```mermaid
 flowchart TB
+
+%% Using high-contrast colors that work well on both dark and light backgrounds
+classDef client fill:#5271ff,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef server fill:#ff7452,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef library fill:#42b983,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef tools fill:#f4a261,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef test fill:#8338ec,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef build fill:#8338ec,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef data fill:#42b983,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef engine fill:#5271ff,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef external fill:#ff7452,stroke:#000000,stroke-width:2px,color:#ffffff
+
     subgraph OpcodeRanges["OPCODE Ranges"]
         SYSTEM["SYSTEM (1-255)"]
         AUDIO["AUDIO (256-511)"]
@@ -1065,18 +1077,13 @@ flowchart TB
 
     USER --> UI
 
-    classDef system fill:#ff9,stroke:#333
-    classDef audio fill:#9cf,stroke:#333
-    classDef ble fill:#f9c,stroke:#333
-    classDef sensor fill:#9f9,stroke:#333
-    classDef user fill:#c9f,stroke:#333
-
-    class SYSTEM system
-    class AUDIO audio
-    class BLE ble
-    class SENSOR sensor
-    class USER user
+    class SYSTEM client
+    class AUDIO server
+    class BLE library
+    class SENSOR tools
+    class USER engine
 ```
+
 
 ### 3.2 Transport Paths Configuration Map
 
@@ -1084,9 +1091,21 @@ This diagram shows the physical communication paths between SoCs and cores:
 
 ```mermaid
 graph TD
+
+%% Using high-contrast colors that work well on both dark and light backgrounds
+classDef client fill:#5271ff,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef server fill:#ff7452,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef library fill:#42b983,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef tools fill:#f4a261,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef test fill:#8338ec,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef build fill:#8338ec,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef data fill:#42b983,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef engine fill:#5271ff,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef external fill:#ff7452,stroke:#000000,stroke-width:2px,color:#ffffff
+
     subgraph MAIN_SOC["MAIN_SOC"]
         ARM_CORE["ARM Core (Cortex-M7)"]
-        DSP_CORE["DSP Core (Tensilica HiFi4)"]
+        DSP_CORE["DSP Core ()"]
 
         ARM_CORE ---|"IPC OpenAMP<br/>100MB/s, 100μs"| DSP_CORE
     end
@@ -1102,14 +1121,11 @@ graph TD
     ARM_CORE ---|"UART HCI<br/>3MB/s, 2ms"| BLE_CORE
     ARM_CORE ---|"I2C<br/>400KB/s, 5ms"| SENSOR_CORE
 
-    classDef mainSoc fill:#f9f9f9,stroke:#333,stroke-width:2px
-    classDef bleSoc fill:#e6f3ff,stroke:#333,stroke-width:2px
-    classDef sensorSoc fill:#f0fff0,stroke:#333,stroke-width:2px
-
-    class MAIN_SOC mainSoc
-    class BLE_SOC bleSoc
-    class SENSOR_SOC sensorSoc
+    class MAIN_SOC client
+    class BLE_SOC server
+    class SENSOR_SOC library
 ```
+
 
 ## 4. Configuration Mapping Visualization
 
@@ -1119,6 +1135,18 @@ This diagram visualizes how OPCODEs are mapped to specific protocols and drivers
 
 ```mermaid
 graph TD
+
+%% Using high-contrast colors that work well on both dark and light backgrounds
+classDef client fill:#5271ff,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef server fill:#ff7452,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef library fill:#42b983,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef tools fill:#f4a261,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef test fill:#8338ec,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef build fill:#8338ec,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef data fill:#42b983,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef engine fill:#5271ff,stroke:#000000,stroke-width:2px,color:#ffffff
+classDef external fill:#ff7452,stroke:#000000,stroke-width:2px,color:#ffffff
+
     subgraph OPCODEs["OPCODEs"]
         OP_SYS["SYSTEM OPCODEs (1-255)"]
         OP_AUDIO["AUDIO OPCODEs (256-511)"]
@@ -1149,15 +1177,10 @@ graph TD
     PROTO_LITE --> DRV_IPC
     PROTO_SEC --> DRV_UART
 
-    classDef systemStyle fill:#ff9,stroke:#333
-    classDef audioStyle fill:#9cf,stroke:#333
-    classDef bleStyle fill:#f9c,stroke:#333
-    classDef sensorStyle fill:#9f9,stroke:#333
-    classDef protoStyle fill:#ddd,stroke:#333
-
-    class OP_SYS systemStyle
-    class OP_AUDIO audioStyle
-    class OP_BLE bleStyle
-    class OP_SENSOR sensorStyle
-    class PROTO_ACK,PROTO_LITE,PROTO_SEC protoStyle
+    class OP_SYS client
+    class OP_AUDIO server
+    class OP_BLE library
+    class OP_SENSOR tools
+    class PROTO_ACK,PROTO_LITE,PROTO_SEC engine
 ```
+
