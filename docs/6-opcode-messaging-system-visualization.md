@@ -403,15 +403,17 @@ graph TD
 This comprehensive visualization shows the complete system with all components and their interactions, from configuration through runtime execution.
 
 ```mermaid
+%% Mermaid 10+; avoid markdown lists in node labels
 graph TB
-    %% Top-level system overview
+
+    %% ----- System Configuration Layer -----
     subgraph SystemConfigurationLayer["System Configuration Layer"]
         CONFIG_FILES["Configuration Files<br/>JSON/YAML"]
         CONFIG_MGR["Configuration Manager<br/>Validation, Hot-swap"]
-
         CONFIG_FILES --> CONFIG_MGR
     end
 
+    %% ----- Runtime System + Component Managers -----
     subgraph RuntimeSystem["Runtime System"]
         COMM_MGR["Communication Manager<br/>Central Hub"]
 
@@ -430,6 +432,7 @@ graph TB
         COMM_MGR <--> QOS_MGR
     end
 
+    %% Config wiring
     CONFIG_MGR -->|Configure| COMM_MGR
     CONFIG_MGR -->|Configure| OP_REG
     CONFIG_MGR -->|Configure| ROUTE_MGR
@@ -437,11 +440,13 @@ graph TB
     CONFIG_MGR -->|Configure| DRIVER_MGR
     CONFIG_MGR -->|Configure| QOS_MGR
 
+    %% ----- Application Interface -----
     subgraph ApplicationInterface["Application Interface"]
         APP_API["Application API<br/>publish(), subscribe()"]
         APP_API <-->|Use| COMM_MGR
     end
 
+    %% ----- Hardware Integration Layer -----
     subgraph HardwareIntegrationLayer["Hardware Integration Layer"]
         IPC_HW["IPC Hardware<br/>Shared Memory, Mailboxes"]
         I2C_HW["I2C Hardware<br/>Controllers, Buses"]
@@ -454,28 +459,32 @@ graph TB
         DRIVER_MGR -->|Access| UART_HW
     end
 
+    %% ----- Physical Topology -----
     subgraph PhysicalTopology["Physical Topology"]
-        SOC1["SoC 1<br/>Application Processor"]
+        SOC1_C1["SoC 1 Core1<br/>Application Processor"]
+        SOC1_C2["SoC 1 Core2<br/>DSP/RT"]
         SOC2["SoC 2<br/>Connectivity"]
         SOC3["SoC 3<br/>Sensor Hub"]
 
-        SOC1 <-->|IPC| SOC1
-        SOC1 <-->|UART| SOC2
-        SOC1 <-->|I2C| SOC3
+        SOC1_C1 <-->|IPC| SOC1_C2
+        SOC1_C1 <-->|UART| SOC2
+        SOC1_C1 <-->|I2C| SOC3
     end
 
-    IPC_HW -->|Connect| SOC1
+    %% HW to SoC connections
+    IPC_HW -->|Connect| SOC1_C2
     UART_HW -->|Connect| SOC2
     I2C_HW -->|Connect| SOC3
+    SPI_HW -. optional .- SOC2
 
-    %% Message Flow Overlay
-    MSG_FLOW_1["1. App Creates Message"]
-    MSG_FLOW_2["2. Validate OPCODE"]
-    MSG_FLOW_3["3. Apply QoS"]
-    MSG_FLOW_4["4. Resolve Routes"]
-    MSG_FLOW_5["5. Encode Protocol"]
-    MSG_FLOW_6["6. Transmit via Driver"]
-    MSG_FLOW_7["7. Hardware Transmission"]
+    %% ----- Message Flow Overlay (labels avoid "1." etc.) -----
+    MSG_FLOW_1["Step 1 — App creates message"]
+    MSG_FLOW_2["Step 2 — Validate OPCODE"]
+    MSG_FLOW_3["Step 3 — Apply QoS"]
+    MSG_FLOW_4["Step 4 — Resolve routes"]
+    MSG_FLOW_5["Step 5 — Encode protocol"]
+    MSG_FLOW_6["Step 6 — Transmit via driver"]
+    MSG_FLOW_7["Step 7 — Hardware transmission"]
 
     MSG_FLOW_1 -->|Flow| APP_API
     APP_API -->|Flow| MSG_FLOW_2
@@ -491,21 +500,21 @@ graph TB
     DRIVER_MGR -->|Flow| MSG_FLOW_7
     MSG_FLOW_7 -->|Flow| IPC_HW
 
-    %% Style nodes
+    %% ----- Styles -----
     classDef configLayer fill:#ffdddd,stroke:#333,stroke-width:2px
     classDef runtimeSys fill:#ddffdd,stroke:#333,stroke-width:2px
     classDef compMgr fill:#ddddff,stroke:#333,stroke-width:1px
     classDef appIface fill:#ffffdd,stroke:#333,stroke-width:2px
     classDef hwLayer fill:#ddffff,stroke:#333,stroke-width:2px
     classDef topology fill:#ffddff,stroke:#333,stroke-width:2px
-    classDef msgFlow fill:#ffffff,stroke:#ff0000,stroke-width:1px,stroke-dasharray: 5 5
+    classDef msgFlow fill:#ffffff,stroke:#ff0000,stroke-width:1px
 
     class CONFIG_FILES,CONFIG_MGR configLayer
     class COMM_MGR runtimeSys
     class OP_REG,ROUTE_MGR,PROTO_MGR,DRIVER_MGR,QOS_MGR compMgr
     class APP_API appIface
     class IPC_HW,I2C_HW,SPI_HW,UART_HW hwLayer
-    class SOC1,SOC2,SOC3 topology
+    class SOC1_C1,SOC1_C2,SOC2,SOC3 topology
     class MSG_FLOW_1,MSG_FLOW_2,MSG_FLOW_3,MSG_FLOW_4,MSG_FLOW_5,MSG_FLOW_6,MSG_FLOW_7 msgFlow
 ```
 
