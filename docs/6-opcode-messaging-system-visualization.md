@@ -59,12 +59,12 @@ flowchart TB
     %% Extended Flow with Message Operations
     subgraph MessageOps["Message Operations"]
         direction TB
-        MSG_CREATE["1. Create Message<br/>with OPCODE"]
-        OPCODE_VAL["2. Validate OPCODE<br/>Check Max Size"]
-        ROUTE_RES["3. Resolve Route<br/>Find Subscribers"]
-        QOS_APPLY["4. Apply QoS<br/>Prioritize Message"]
-        PROTO_ENC["5. Protocol Encoding<br/>Add Headers, Fragment"]
-        DRIVER_TX["6. Driver Transmission<br/>Physical Layer Sending"]
+        MSG_CREATE["Step 1: Create Message<br/>with OPCODE"]
+        OPCODE_VAL["Step 2: Validate OPCODE<br/>Check Max Size"]
+        ROUTE_RES["Step 3: Resolve Route<br/>Find Subscribers"]
+        QOS_APPLY["Step 4: Apply QoS<br/>Prioritize Message"]
+        PROTO_ENC["Step 5: Protocol Encoding<br/>Add Headers, Fragment"]
+        DRIVER_TX["Step 6: Driver Transmission<br/>Physical Layer Sending"]
 
         MSG_CREATE --> OPCODE_VAL
         OPCODE_VAL --> ROUTE_RES
@@ -85,11 +85,11 @@ flowchart TB
     %% Message Reception Flow
     subgraph MessageRec["Message Reception"]
         direction TB
-        DRV_RX["1. Driver Reception<br/>Physical Layer Receiving"]
-        PROTO_DEC["2. Protocol Decoding<br/>Parse Headers, Reassemble"]
-        ROUTE_FWD["3. Routing Decision<br/>Forward or Deliver"]
-        MSG_DLVR["4. Message Delivery<br/>To Subscribers"]
-        ACK_GEN["5. ACK Generation<br/>If Required"]
+        DRV_RX["Step 1: Driver Reception<br/>Physical Layer Receiving"]
+        PROTO_DEC["Step 2: Protocol Decoding<br/>Parse Headers, Reassemble"]
+        ROUTE_FWD["Step 3: Routing Decision<br/>Forward or Deliver"]
+        MSG_DLVR["Step 4: Message Delivery<br/>To Subscribers"]
+        ACK_GEN["Step 5: ACK Generation<br/>If Required"]
 
         DRV_RX --> PROTO_DEC
         PROTO_DEC --> ROUTE_FWD
@@ -107,10 +107,31 @@ flowchart TB
     classDef app fill:#9cf,stroke:#333,stroke-width:1px
     classDef operation fill:#cfc,stroke:#333,stroke-width:1px
 
-    class CONFIG_FILE,OPCODE_DEF,DRIVER_DEF,PROTOCOL_DEF,ROUTE_DEF,QOS_DEF config
-    class CM,OPREG,ROUTE_MGR,PROTO_FACT,DRV_MGR,QOS_MGR runtime
-    class APP_PUB,APP_SUB app
-    class MSG_CREATE,OPCODE_VAL,ROUTE_RES,QOS_APPLY,PROTO_ENC,DRIVER_TX,DRV_RX,PROTO_DEC,ROUTE_FWD,MSG_DLVR,ACK_GEN operation
+    class CONFIG_FILE config
+    class OPCODE_DEF config
+    class DRIVER_DEF config
+    class PROTOCOL_DEF config
+    class ROUTE_DEF config
+    class QOS_DEF config
+    class CM runtime
+    class OPREG runtime
+    class ROUTE_MGR runtime
+    class PROTO_FACT runtime
+    class DRV_MGR runtime
+    class QOS_MGR runtime
+    class APP_PUB app
+    class APP_SUB app
+    class MSG_CREATE operation
+    class OPCODE_VAL operation
+    class ROUTE_RES operation
+    class QOS_APPLY operation
+    class PROTO_ENC operation
+    class DRIVER_TX operation
+    class DRV_RX operation
+    class PROTO_DEC operation
+    class ROUTE_FWD operation
+    class MSG_DLVR operation
+    class ACK_GEN operation
 ```
 
 ## 2. Advanced Visualization: Multi-SoC OPCODE Routing
@@ -189,9 +210,18 @@ graph TD
     classDef opcodeNode fill:#ccccff,stroke:#333,stroke-width:1px
     classDef msgNode fill:#ffffcc,stroke:#333,stroke-width:1px
 
-    class SoC1_ARM,SoC1_DSP,SoC2_BLE,SoC3_MCU coreNode
-    class SYS_OPCODES,AUDIO_OPCODES,BLE_OPCODES,SENSOR_OPCODES opcodeNode
-    class MSG_SYS,MSG_AUDIO,MSG_BLE,MSG_SENSOR msgNode
+    class SoC1_ARM coreNode
+    class SoC1_DSP coreNode
+    class SoC2_BLE coreNode
+    class SoC3_MCU coreNode
+    class SYS_OPCODES opcodeNode
+    class AUDIO_OPCODES opcodeNode
+    class BLE_OPCODES opcodeNode
+    class SENSOR_OPCODES opcodeNode
+    class MSG_SYS msgNode
+    class MSG_AUDIO msgNode
+    class MSG_BLE msgNode
+    class MSG_SENSOR msgNode
 ```
 
 ## 3. Protocol Stack Visualization
@@ -274,9 +304,22 @@ graph TD
     classDef transport fill:#ffccff,stroke:#333,stroke-width:1px
 
     class APP_MSG appLayer
-    class PROTO_SELECTOR,CUSTOM_ACK,CUSTOM_LITE,SECURE_AES protoSelect
-    class ACK_BASE,ACK_RELIABILITY,ACK_INTEGRITY,LITE_BASE,LITE_INTEGRITY,SEC_BASE,SEC_AUTH,SEC_ENCRYPT,SEC_INTEGRITY protoLayer
-    class ACK_FRAME,LITE_FRAME,SEC_FRAME frameFormat
+    class PROTO_SELECTOR protoSelect
+    class CUSTOM_ACK protoSelect
+    class CUSTOM_LITE protoSelect
+    class SECURE_AES protoSelect
+    class ACK_BASE protoLayer
+    class ACK_RELIABILITY protoLayer
+    class ACK_INTEGRITY protoLayer
+    class LITE_BASE protoLayer
+    class LITE_INTEGRITY protoLayer
+    class SEC_BASE protoLayer
+    class SEC_AUTH protoLayer
+    class SEC_ENCRYPT protoLayer
+    class SEC_INTEGRITY protoLayer
+    class ACK_FRAME frameFormat
+    class LITE_FRAME frameFormat
+    class SEC_FRAME frameFormat
     class DRIVER_TX transport
 ```
 
@@ -390,12 +433,31 @@ graph TD
     classDef scheduler fill:#ffccff,stroke:#333,stroke-width:1px
     classDef transmission fill:#ccffff,stroke:#333,stroke-width:1px
 
-    class MSG_CREATE,MSG_SEND msgCreate
-    class QOS_CLASSIFY,QOS_URGENT,QOS_HIGH,QOS_NORMAL,QOS_LOW qosClass
-    class RES_ALLOC,CPU_ALLOC,MEM_ALLOC,BW_ALLOC resAlloc
-    class QUEUE_MGR,QUEUE_U,QUEUE_H,QUEUE_N,QUEUE_L queueMgr
-    class SCHED,SCHED_U,SCHED_H,SCHED_N,SCHED_L scheduler
-    class TX_MGR,TX_IMMEDIATE,TX_RELIABLE,TX_BACKGROUND transmission
+    class MSG_CREATE msgCreate
+    class MSG_SEND msgCreate
+    class QOS_CLASSIFY qosClass
+    class QOS_URGENT qosClass
+    class QOS_HIGH qosClass
+    class QOS_NORMAL qosClass
+    class QOS_LOW qosClass
+    class RES_ALLOC resAlloc
+    class CPU_ALLOC resAlloc
+    class MEM_ALLOC resAlloc
+    class BW_ALLOC resAlloc
+    class QUEUE_MGR queueMgr
+    class QUEUE_U queueMgr
+    class QUEUE_H queueMgr
+    class QUEUE_N queueMgr
+    class QUEUE_L queueMgr
+    class SCHED scheduler
+    class SCHED_U scheduler
+    class SCHED_H scheduler
+    class SCHED_N scheduler
+    class SCHED_L scheduler
+    class TX_MGR transmission
+    class TX_IMMEDIATE transmission
+    class TX_RELIABLE transmission
+    class TX_BACKGROUND transmission
 ```
 
 ## 5. End-to-End System Integration View
@@ -509,13 +571,30 @@ graph TB
     classDef topology fill:#ffddff,stroke:#333,stroke-width:2px
     classDef msgFlow fill:#ffffff,stroke:#ff0000,stroke-width:1px
 
-    class CONFIG_FILES,CONFIG_MGR configLayer
+    class CONFIG_FILES configLayer
+    class CONFIG_MGR configLayer
     class COMM_MGR runtimeSys
-    class OP_REG,ROUTE_MGR,PROTO_MGR,DRIVER_MGR,QOS_MGR compMgr
+    class OP_REG compMgr
+    class ROUTE_MGR compMgr
+    class PROTO_MGR compMgr
+    class DRIVER_MGR compMgr
+    class QOS_MGR compMgr
     class APP_API appIface
-    class IPC_HW,I2C_HW,SPI_HW,UART_HW hwLayer
-    class SOC1_C1,SOC1_C2,SOC2,SOC3 topology
-    class MSG_FLOW_1,MSG_FLOW_2,MSG_FLOW_3,MSG_FLOW_4,MSG_FLOW_5,MSG_FLOW_6,MSG_FLOW_7 msgFlow
+    class IPC_HW hwLayer
+    class I2C_HW hwLayer
+    class SPI_HW hwLayer
+    class UART_HW hwLayer
+    class SOC1_C1 topology
+    class SOC1_C2 topology
+    class SOC2 topology
+    class SOC3 topology
+    class MSG_FLOW_1 msgFlow
+    class MSG_FLOW_2 msgFlow
+    class MSG_FLOW_3 msgFlow
+    class MSG_FLOW_4 msgFlow
+    class MSG_FLOW_5 msgFlow
+    class MSG_FLOW_6 msgFlow
+    class MSG_FLOW_7 msgFlow
 ```
 
 This comprehensive set of visualizations provides a clear understanding of how the entire OPCODE messaging system works together, from configuration through runtime message processing, across multiple SoCs and transport layers.
